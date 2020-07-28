@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+{% block nav %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECO DB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.js"></script>
+   <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css" rel="stylesheet"/>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+
+
+
+<style>
+.tab {
+    overflow: hidden;
+    border: 2px solid #85929E;
+    background-color: lightseagreen;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 14px;
+    font-variant: small-caps;
+    color: white;
+}
+
+table, th, td, tr {
+    border: 1px solid black;
+    font-size: 13px;
+    overflow: auto;
+}
+
+th {
+    text-align: center;
+}
+h2 {
+    color: #EAF2EF;
+}
+#nav {
+    background-color: #39B7CD;
+    color: white;
+    padding-bottom: 20px;
+    text-align: -webkit-center;
+    font-size: 22px;
+}
+.lightRed {
+  background-color: #ff8080 !important;
+    color: white;
+}
+
+.lightRed a {
+  color: #fff;
+  font-weight: bold;
+}
+
+.red {
+  background-color: hotpink;
+}
+  #myTable thead{
+        font-size: 11px;
+    }
+    .table input {
+        width: inherit;
+    }
+    .input_data { width: inherit;
+    font-size: 20px;
+        background-color: turquoise;
+    }
+    td.details-control {
+    background: url('../static/details_open.png') no-repeat left;
+    cursor: pointer;
+}
+tr.details td.details-control {
+    background: url('../static/details_close.png') no-repeat left;
+}
+    #print_btn {
+    background-color: paleturquoise;
+}
+
+#print_btn:hover {
+        background-color: #5fe3da;
+    }
+    .dt-buttons {  margin-top: 18px;
+    margin-left: -107px;
+
+}
+</style>
+</head>
+<body style="padding-left: 30px; padding-right: 30px; background-color: #C1F0F6">
+
+<h2></h2>
+    <div>
+    <nav id="nav" class="tab">ECO DATABASE REPORTS
+   <form class="form-horizontal" action="/print" method="get" target="_blank">
+        <input class="form-control" type="text" style="text-align: center" name="eco_name_send" placeholder="ECO-XXXXXX">
+        <input class="form-control" type="submit" id="print_btn" value="Print ECO-PDF" style="border:1px solid">
+{#        <a>*Check for spaces if print is empty</a>#}
+    </form>
+        </nav>
+    </div>
+<div style="height:auto;width:auto;overflow:auto; font-size:12px; border: 2px solid black;">
+    <div style="font-size:12px;">
+        <table class="display" id="myTable"  style="width:100%;">
+        <thead>
+            <tr style="text-align:center; background-color: #1ABC9C; font-size:13px;color: black">
+                <th></th>
+            <th class="filters" id="eco_name" onchange="filterTables()">ECO Name</th>
+            <th class="filters" id="ori" onchange="filterTables_originator()">Originator</th>
+            <th class="filters">Prod Line</th>
+            <th>ECO Released</th>
+            <th>ECO Originated</th>
+            <th>ECO Cat Change</th>
+            <th>ECO level</th>
+            <th>ECO impl date</th>
+            <th>ECO Verified date</th>
+            <th>Tracking Comment</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+    <div style="font-size:12px;">
+     <table id="myTable2" class="display" style="width:100%;">
+        <thead>
+        <tr class="column" style="text-align: center; background-color:#1ABC9C">
+            <th id="eco_name2">ECO_Name</th>
+            <th>Item Name</th>
+            <th>Item Description</th>
+            <th>Item New revision</th>
+            <th>Qty on Hand</th>
+            <th>In Process</th>
+            <th>On Order</th>
+            <th>In Stock</th>
+            <th>In Field</th>
+            <th>Disp Notes</th>
+            <th>Requested change</th>
+            <th id="ori2">Originator</th>
+        </tr>
+        </thead>
+     </table>
+    </div>
+<div>
+
+</div>
+<script>
+    function format ( d ) {
+
+
+                     return 'ECO-Description : ' +  d[10] +'<br>'
+                         ;}
+
+    $(document).ready(function() {
+
+    var dt1 = $('#myTable').DataTable( {
+        
+        "ajax": "/all_ecos",
+        "deferRender": false,        
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                autoFilter: true,
+
+
+                customize: function (xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                    $('c[r=B2] t', sheet).text('ECO-Name');
+                    $('c[r=C2] t', sheet).text('ECO-Originator');
+                    $('c[r=D2] t', sheet).text('Production Lines');
+
+                }
+            }],
+
+
+                "columns": [
+
+            {
+                "class":          "details-control",
+                "orderable":      false,
+                "data":           null,
+                "defaultContent": "",
+
+            },
+            { "data": 0 },
+            { "data": 1 },
+            { "data": 2 },
+            { "data": 3 },
+            { "data": 4 },
+            { "data": 5 },
+            { "data": 6 },
+            { "data": 7 },
+            { "data": 8 },
+            { "data": 9 }],
+
+        "columnDefs": [{"targets": [10],
+            "class": "tracking"
+
+    },
+            {"targets": [9],
+            "class": "date_ver"
+
+    },
+
+        {"targets":[4,5,8,9],
+        "render":function(data){
+            if (moment(data).isValid()) {
+      return moment(data).format('YYYY-MM-DD HH:MM:SS'); }
+      else {
+         return '' ;
+      }}
+    }],
+        "fnDrawCallback": function (){
+              $(".tracking").each(function(){
+            var currentRow=$(this).closest("tr");
+            var col =currentRow.find("td:parent:eq(0)").text();
+            $(this).editable('/update_comment', {
+                "submitdata": function () {
+                    return {id: col}
+                }
+            });
+             });
+               $(".date_ver").each(function(){
+            var currentRow=$(this).closest("tr");
+            var col =currentRow.find("td:parent:eq(0)").text();
+            $(this).editable('/update_date_ver', {
+                "submitdata": function () {
+                    return {id: col}
+                }
+            });
+             });
+
+        },
+
+        initComplete: function () {
+
+            this.api().columns('.filters').every( function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo( $(column.header()).empty() )
+                    .on( 'change', function () {
+
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    } );
+
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+
+            var dt = $('#myTable2').DataTable();
+
+            var detailRows = [];
+
+            $('#myTable tbody').on('click', 'tr td.details-control', function () {
+
+                var tr = $(this).closest('tr');
+
+                var row = dt1.row(tr);
+                var idx = $.inArray(tr.attr('id'), detailRows);
+
+                if (row.child.isShown()) {
+                    tr.removeClass('details');
+                    row.child.hide();
+
+                    // Remove from the 'open' array
+                    detailRows.splice(idx, 1);
+                } else {
+                    tr.addClass('details');
+                    row.child(format(row.data())).show();
+
+                    // Add to the 'open' array
+                    if (idx === -1) {
+                        detailRows.push(tr.attr('id'));
+                    }
+                }
+            });
+
+            // On each draw, loop over the `detailRows` array and show any child rows
+            dt.on('draw', function () {
+                $.each(detailRows, function (i, id) {
+                    $('#' + id + ' td.details-control').trigger('click');
+                });
+            });            
+    }
+    });
+
+
+
+} );
+</script>
+<script>
+$(document).ready(function() {
+    $('#myTable2').DataTable( {
+        {#"processing": true,#}
+        {#"serverSide": true,#}
+        "ajax": "/all_items",
+        "deferRender": false,
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                autoFilter: true,
+            }],
+        "columns": [
+                    {"data": 0},
+            {"data": 1},
+            {"data": 2},
+            {"data": 3},
+            {"data": 9},
+            {"data": 4},
+            {"data": 5},
+            {"data": 6},
+            {"data": 7},
+            {"data": 10},
+            {"data": 8},
+            {"data": 13}
+            ]
+
+    } );
+} );
+</script>
+<script>
+    function filterTables() {
+
+        var eco_name = $("#eco_name option:selected").text();
+        $('#eco_name').on('blur', function() {
+           {#var val = $(this).val();#}
+           {# $('#eco_name2 option').filter(function() {return $.trim( $(this).text() ) === eco_name; }).attr('selected','selected', 'refresh');#}
+            var val = eco_name;
+
+           var dataTable = $('#myTable2').dataTable();
+           dataTable.fnFilter(val);
+        });
+
+    }
+</script>
+<script>
+    function filterTables_originator() {
+
+        var ori_name = $("#ori option:selected").text();
+        $('#ori').on('blur', function() {
+           {#var val = $(this).val();#}
+           {# $('#eco_name2 option').filter(function() {return $.trim( $(this).text() ) === eco_name; }).attr('selected','selected', 'refresh');#}
+            var val = ori_name;
+
+           var dataTable = $('#myTable2').dataTable();
+           dataTable.fnFilter(val);
+        });
+
+    }
+</script>
+</body>
+</html>
+{% endblock %}

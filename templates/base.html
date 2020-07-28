@@ -1,0 +1,173 @@
+{% from "macros.html" import nav_link with context %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ECO-DB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<style type="text/css">
+
+      body {
+background-color: #63AAEC; }
+      #ship_l {
+          overflow: auto;
+          border: 1px white;
+          margin-left: 200px;
+          margin-right: 200px;
+          background-color: #63AAEC;
+          font-size: 18px;
+          text-align: -webkit-center;
+
+
+      }
+      h2 {color: red;}
+        nav {
+            font-family: "Eaton Medium";
+            font-size: 26px;
+            color: white;
+            font-variant: small-caps;
+            text-align: center;
+        }
+
+        #access ul, a{
+        margin: 10px 0 0 10px ;
+            color: -moz-menuhover;
+            text-decoration-color: black;
+      }
+
+        .navbar-nav > .active > a {
+  color: white;
+}
+#update_btn {
+    background-color: mediumseagreen;
+}
+#discard_btn_div_sl {
+    display: none;
+}
+#discard_btn1 {
+    background-color: #EC6399;
+}
+
+    input[type=text]:focus, textarea:focus {
+  box-shadow: 0 0 5px chartreuse;
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid plum;
+}
+    #quantity_place{
+   {#padding-left: 70px;#}
+        margin-top: 5px;
+    float: left;
+
+    }
+    #shipl_tav {
+    padding-left: 77px;
+        margin-top: 18px;
+        margin-left: 15px;
+        {#width: 50%;#}
+        float: right;
+}
+
+    #shipl_input_lavamaara  {
+
+        width: 20%;
+      {#margin-right: 600px;#}
+        float: left;
+        margin-top: 18px;
+        margin-left: 5px;
+    }
+    #maaratext {
+
+      padding-top: 20px;
+      float: left;
+}
+    #ship_l  {
+    font-size: 22px;
+              }
+    #input1{
+       margin-top: 10px;
+        width: 100%;
+        overflow: hidden;
+        float: start;
+        text-align: center;
+
+        font-size: 45px;
+        size: 4px;
+
+    }
+input[type=text]:focus, textarea:focus {
+  box-shadow: 0 0 5px mediumspringgreen;
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid yellowgreen;
+}
+ #quantity_place {
+   {#padding-left: 70px;#}
+        margin-top: 5px;
+    float: left;
+
+    }
+
+#shipl_enum {
+padding-top: 50px;
+      }
+h3, label, p {
+    color: black;
+    font-family: "Eaton Medium";
+    font-weight: normal;
+}
+
+
+        #access ul, a{
+        margin: 7px 0 0 7px ;
+            color: #39B7CD;
+      }
+
+        .nav > .active > a {
+  color: white;
+            border-color: white;
+}
+         .nav :hover{
+  color: white;
+            border-color: white;
+}
+
+    </style>
+  </head>
+  <body>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css">
+
+
+  <nav id="access" class="nav bg-dark static-top">
+  <div class="container">
+
+      <ul class="nav justify-content-md-start">
+
+          <li class="nav-item">
+          <a class="nav-link active"> {{ nav_link('active_ecos', 'ACTIVE ECOS') }}</a>
+          </li>
+          <li class="nav-item">
+           <a class="nav-link"> {{ nav_link('all_ecos', 'ALL ECOS') }}</a>
+          </li>
+          <li class="nav-link">
+          <a class="nav-item"> {{ nav_link('suppliers_table', 'ECOs By Suppliers') }} </a>
+          </li>
+          <li class="nav-link">
+          <a class="nav-item">{{ nav_link('suppliers_n_items', 'Suppliers And Items') }}</a>
+          </li>
+          <li class="nav-link">
+          <a class="nav-item">{{ nav_link('items_only', 'Items Information') }}</a>
+          </li>
+
+      </ul>
+    </div>
+</nav>
+{% block nav %}
+
+{% endblock %}

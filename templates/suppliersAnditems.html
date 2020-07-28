@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block nav %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ECO DB</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.21/datatables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+
+<style>
+.tab {
+    overflow: hidden;
+    border: 2px solid #85929E;
+    background-color: lightseagreen;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 14px;
+    font-variant: small-caps;
+    color: white;
+}
+
+table, th, td, tr {
+    border: 1px solid black;
+    font-size: 13px;
+    overflow: auto;
+}
+
+th {
+    text-align: center;
+}
+h2 {
+    color: #EAF2EF;
+}
+#nav {
+    background-color: #39B7CD;
+    color: white;
+    padding-bottom: 20px;
+    text-align: -webkit-center;
+    font-size: 22px;
+}
+  #myTable thead{
+        font-size: 11px;
+    }
+    .table input {
+        width: inherit;
+    }
+#print_btn {
+    background-color: paleturquoise;
+}
+
+#print_btn:hover {
+        background-color: #5fe3da;
+    }
+    .dt-buttons {  margin-top: 18px;
+    margin-left: -107px;
+
+}
+</style>
+</head>
+<body style="padding-left: 30px; padding-right: 30px; background-color: #C1F0F6">
+
+<h2></h2>
+    <div>
+    <nav id="nav" class="tab">ECO DATABASE REPORTS
+   <form class="form-horizontal" action="/print" method="get" target="_blank">
+        <input class="form-control" type="text" style="text-align: center" name="eco_name_send" placeholder="ECO-XXXXXX">
+        <input class="form-control" type="submit" id="print_btn" value="Print ECO-PDF" style="border:1px solid">
+{#        <a>*Check for spaces if print is empty</a>#}
+    </form>
+        </nav>
+    </div>
+<div style="height:auto;width:auto;overflow:auto; font-size:12px; border: 2px solid black;">
+    <div style="font-size:12px;">
+        <table class="display" id="myTable"  style="width:100%;">
+        <thead>
+            <tr style="text-align:center; background-color: #1ABC9C; font-size:13px;color: black">
+                <th class="filters">ECO_Name</th>
+        <th class="filters">Supplier</th>
+        <th>Item Name</th>
+        <th>Item Description</th>
+        <th>Item New revision</th>
+        <th>New Price</th>
+        <th>Quantity in Hand</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    </div>
+<div>
+
+</div>
+<script>
+$(document).ready(function() {
+    $('#myTable').DataTable({
+        {#"processing": true,#}
+        {#"serverSide": true,#}
+        "ajax": "/bysuppliersanditems",
+        "deferRender": false,
+         dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                autoFilter: true,
+                customize: function (xlsx) {
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                    $('c[r=A2] t', sheet).text('ECO-Name');
+                    $('c[r=B2] t', sheet).text('Suppliers');
+
+                }
+            }],
+        "columns": [
+            {"data": 0},
+            {"data": 1},
+            {"data": 2},
+            {"data": 3},
+            {"data": 4},
+            {"data": 5},
+            {"data": 6}
+
+        ],
+
+        initComplete: function () {
+
+            this.api().columns('.filters').every(function () {
+                var column = this;
+                var select = $('<select><option value=""></option></select>')
+                    .appendTo($(column.header()).empty())
+                    .on('change', function () {
+
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+
+                        column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+
+                column.data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '">' + d + '</option>')
+                });
+            });
+
+        }
+    });
+} );
+</script>
+<script>
+    $(document).ready(function () {
+  $('.dataTables_filter input[type="search"]').css(
+     {'width':'350px','display':'inline-block'}
+  );
+});
+</script>
+</body>
+</html>
+{% endblock %}
