@@ -1,3 +1,4 @@
+# set up file for executable application
 from cx_Freeze import setup, Executable
 
 includefiles = ['templates/', 'static/']
