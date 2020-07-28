@@ -43,36 +43,12 @@ def data():
 
 
 @app.route('/active')
-def active_ecos():
-    # all_ecos_table = kan.table_all_ecos()
-    # all_ecos_table_dict = list(dict.fromkeys(all_ecos_table))
-    # active_ecos_table = []
-    # for x in all_ecos_table_dict:
-    #     if x[8] == '':
-    #         active_ecos_table.append(x)
-    #
-    # item_table = kan.table_items()
-    # eco_name_ac = list(dict.fromkeys([x[0] for x in active_ecos_table]))
-    # eco_items_active = []
-    # for x in item_table:
-    #     if x[0] in eco_name_ac:
-    #         eco_items_active.append(x)
-    # print(active_ecos_table)
+def active_ecos():   
     return render_template('activeEcos.html')
 
 
 @app.route('/all')
-def all_ecos():
-    # all_ecos_table = kan.table_all_ecos()
-    # all_ecos_table_dict = list(dict.fromkeys(all_ecos_table))
-    # all_table = []
-    # for x in all_ecos_table_dict:
-    #     all_table.append(x)
-    # items = kan.table_items()
-    # items_table = []
-    # for x in items:
-    #     items_table.append(x)
-
+def all_ecos():   
     return render_template('allEcosTable.html')
 
 
